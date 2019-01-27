@@ -69,6 +69,7 @@
 || clear: Clears address book permanently.
 || 	Example: clear
 || 
+|| update: Updates record entry, more instructions will be given in steps.	Example: update
 || exit: Exits the program.	Example: exit
 || help: Shows program usage instructions.	Example: help
 || ===================================================
