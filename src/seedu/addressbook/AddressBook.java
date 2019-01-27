@@ -132,6 +132,12 @@ public class AddressBook {
     private static final String COMMAND_UPDATE_WORD = "update";
     private static final String COMMAND_UPDATE_DESC = "Updates record entry, more instructions will be given in steps.";
     private static final String COMMAND_UPDATE_EXAMPLE = COMMAND_UPDATE_WORD;
+    private static final String COMMAND_UPDATE_DATA_DESC = "Enter new data to update entry";
+    private static final String COMMAND_UPDATE_DATA_PARAMETER = "NAME "
+            + PERSON_DATA_PREFIX_PHONE + "PHONE_NUMBER "
+            + PERSON_DATA_PREFIX_EMAIL + "EMAIL";
+    private static final String COMMAND_UPDATE_DATA_EXAMPLE = " John Doe p/98765432 e/johnd@gmail.com";
+    private static final String MESSAGE_UPDATED = "Record updated: %1$s, Phone: %2$s, Email: %3$s";
 
     private static final String COMMAND_EXIT_WORD = "exit";
     private static final String COMMAND_EXIT_DESC = "Exits the program.";
@@ -1202,24 +1208,67 @@ public class AddressBook {
         showToUser(toBeDisplayed);
         showToUser(DIVIDER);
 
-        System.out.print(LINE_PREFIX + "Enter index to update: ");
-
-        String rawArgs = SCANNER.nextLine();
-        boolean validIndex = false;
+        String rawArgs;
+        boolean validInput = false;
         int extractedIndex = 1;
 
-        try {
-            extractedIndex = Integer.parseInt(rawArgs.trim()); // use standard libraries to parse
-            validIndex = extractedIndex >= DISPLAYED_INDEX_OFFSET && extractedIndex <= ALL_PERSONS.size();
-        } catch (NumberFormatException nfe) {
-            validIndex = false;
+        while(!validInput) {
+            try {
+                System.out.print(LINE_PREFIX + "Enter index to update: ");
+                rawArgs = SCANNER.nextLine();
+                extractedIndex = Integer.parseInt(rawArgs.trim()); // use standard libraries to parse
+                validInput = extractedIndex >= DISPLAYED_INDEX_OFFSET && extractedIndex <= ALL_PERSONS.size();
+            } catch (NumberFormatException nfe) {
+                validInput = false;
+            }
+
+            if (!validInput) {
+                showToUser("Please enter a valid record index");
+                continue;
+            }
         }
 
-        if (!validIndex)
-        {
-            return "Please enter a valid record index ";
+        validInput = false;
+
+        Optional<String[]> decodeResult = Optional.empty();
+
+        while(!validInput) {
+            System.out.print(LINE_PREFIX + "Enter new data: ");
+            rawArgs = SCANNER.nextLine();
+            // try decoding a person from the raw args
+            decodeResult = decodePersonFromString(rawArgs);
+            // checks if args are valid (decode result will not be present if the person is invalid)
+            if (!decodeResult.isPresent()) {
+                showToUser(getMessageForInvalidCommandInput(COMMAND_UPDATE_WORD, getUsageInfoForUpdateDataCommand()));
+                continue;
+            }
+            validInput = true;
         }
 
-        return "updating";
+        // update the person as specified
+        final String[] dataToUpdate = decodeResult.get();
+        String[] persontoUpdate = ALL_PERSONS.get(extractedIndex - DISPLAYED_INDEX_OFFSET);
+        persontoUpdate[PERSON_DATA_INDEX_NAME] = dataToUpdate[PERSON_DATA_INDEX_NAME];
+        persontoUpdate[PERSON_DATA_INDEX_PHONE] = dataToUpdate[PERSON_DATA_INDEX_PHONE];
+        persontoUpdate[PERSON_DATA_INDEX_EMAIL] = dataToUpdate[PERSON_DATA_INDEX_EMAIL];
+
+        savePersonsToFile(getAllPersonsInAddressBook(), storageFilePath);
+
+        return getMessageForSuccessfulUpdatePerson(persontoUpdate);
+
     }
+
+    /** Returns the string to correct user on entering the data intended for the update */
+    private static String getUsageInfoForUpdateDataCommand() {
+        return String.format(MESSAGE_COMMAND_HELP, COMMAND_UPDATE_WORD, COMMAND_UPDATE_DATA_DESC) + LS
+                + String.format(MESSAGE_COMMAND_HELP_PARAMETERS, COMMAND_UPDATE_DATA_PARAMETER) + LS
+                + String.format(MESSAGE_COMMAND_HELP_EXAMPLE, COMMAND_UPDATE_DATA_EXAMPLE) + LS;
+    }
+
+    private static String getMessageForSuccessfulUpdatePerson(String[] updatedPerson) {
+        return String.format(MESSAGE_UPDATED,
+                getNameFromPerson(updatedPerson), getPhoneFromPerson(updatedPerson), getEmailFromPerson(updatedPerson));
+    }
+
+
 }
