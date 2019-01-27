@@ -269,6 +269,31 @@
 || 
 || 2 persons found!
 || ===================================================
+|| Enter command: || [Command entered:    update]
+|| 	1. Betsy Choo  Phone Number: 222222  Email: benchoo@nus.edu.sg
+|| 	2. Dickson Ee  Phone Number: 444444  Email: dickson@nus.edu.sg
+|| 
+|| ===================================================
+|| Enter index to update: || Please enter a valid record index
+|| Enter index to update: || Please enter a valid record index
+|| Enter index to update: || Please enter a valid record index
+|| Enter index to update: || Enter new data: || Invalid command format: update 
+|| update: Enter new data to update entry
+|| 	Parameters: NAME p/PHONE_NUMBER e/EMAIL
+|| 	Example:  John Doe p/98765432 e/johnd@gmail.com
+|| 
+|| Enter new data: || Invalid command format: update 
+|| update: Enter new data to update entry
+|| 	Parameters: NAME p/PHONE_NUMBER e/EMAIL
+|| 	Example:  John Doe p/98765432 e/johnd@gmail.com
+|| 
+|| Enter new data: || Invalid command format: update 
+|| update: Enter new data to update entry
+|| 	Parameters: NAME p/PHONE_NUMBER e/EMAIL
+|| 	Example:  John Doe p/98765432 e/johnd@gmail.com
+|| 
+|| Enter new data: || Record updated: Betsy Chan, Phone: 112233, Email: betsy@nus.edu.sg
+|| ===================================================
 || Enter command: || [Command entered:  clear]
 || Address book has been cleared!
 || ===================================================
