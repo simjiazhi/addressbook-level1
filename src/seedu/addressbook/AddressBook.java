@@ -1183,8 +1183,43 @@ public class AddressBook {
      * ============================
      */
 
+    /**
+     * This method will first show the list of users,
+     * prompt the user to enter the index to be updated,
+     * before prompting the user to enter the data to update the selected record
+     * @return feedback display message for update
+     *
+     */
+
     private static String executeUpdatePerson()
     {
-        return "Nothing to update";
+        if(ALL_PERSONS.size() < 1)
+        {
+            return "Nothing to update";
+        }
+
+        ArrayList<String[]> toBeDisplayed = getAllPersonsInAddressBook();
+        showToUser(toBeDisplayed);
+        showToUser(DIVIDER);
+
+        System.out.print(LINE_PREFIX + "Enter index to update: ");
+
+        String rawArgs = SCANNER.nextLine();
+        boolean validIndex = false;
+        int extractedIndex = 1;
+
+        try {
+            extractedIndex = Integer.parseInt(rawArgs.trim()); // use standard libraries to parse
+            validIndex = extractedIndex >= DISPLAYED_INDEX_OFFSET && extractedIndex <= ALL_PERSONS.size();
+        } catch (NumberFormatException nfe) {
+            validIndex = false;
+        }
+
+        if (!validIndex)
+        {
+            return "Please enter a valid record index ";
+        }
+
+        return "updating";
     }
 }
