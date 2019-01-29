@@ -969,10 +969,20 @@ public class AddressBook {
     private static boolean isPersonDataExtractableFrom(String personData) {
         final String matchAnyPersonDataPrefix = PERSON_DATA_PREFIX_PHONE + '|' + PERSON_DATA_PREFIX_EMAIL;
         final String[] splitArgs = personData.trim().split(matchAnyPersonDataPrefix);
-        return splitArgs.length == 3 // 3 arguments
-                && !splitArgs[PERSON_DATA_INDEX_NAME].isEmpty() // non-empty arguments
-                && !splitArgs[PERSON_DATA_INDEX_PHONE].isEmpty()
-                && !splitArgs[PERSON_DATA_INDEX_EMAIL].isEmpty();
+        return checkExtractableString(splitArgs);
+    }
+
+    private static boolean checkExtractableString(String[] splitArgs)
+    {
+        if(splitArgs.length != 3
+                || splitArgs[PERSON_DATA_INDEX_NAME].isEmpty()
+                || splitArgs[PERSON_DATA_INDEX_PHONE].isEmpty()
+                || splitArgs[PERSON_DATA_INDEX_EMAIL].isEmpty())
+        {
+            return false;
+        }
+
+        return true;
     }
 
     /**
